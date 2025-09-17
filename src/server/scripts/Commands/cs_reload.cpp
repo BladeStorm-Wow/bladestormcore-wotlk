@@ -22,6 +22,7 @@
 #include "Chat.h"
 #include "CommandScript.h"
 #include "CreatureTextMgr.h"
+#include "CreatureOutfit.h"
 #include "DisableMgr.h"
 #include "GameGraveyard.h"
 #include "ItemEnchantmentMgr.h"
@@ -90,10 +91,11 @@ public:
             { "creature_questender",           HandleReloadCreatureQuestEnderCommand,         SEC_ADMINISTRATOR, Console::Yes },
             { "creature_linked_respawn",       HandleReloadLinkedRespawnCommand,              SEC_ADMINISTRATOR, Console::Yes },
             { "creature_loot_template",        HandleReloadLootTemplatesCreatureCommand,      SEC_ADMINISTRATOR, Console::Yes },
-            { "creature_movement_override",     HandleReloadCreatureMovementOverrideCommand,    SEC_ADMINISTRATOR, Console::Yes},
-            { "creature_onkill_reputation",     HandleReloadOnKillReputationCommand,           SEC_ADMINISTRATOR, Console::Yes },
+            { "creature_movement_override",    HandleReloadCreatureMovementOverrideCommand,   SEC_ADMINISTRATOR, Console::Yes},
+            { "creature_onkill_reputation",    HandleReloadOnKillReputationCommand,           SEC_ADMINISTRATOR, Console::Yes },
             { "creature_queststarter",         HandleReloadCreatureQuestStarterCommand,       SEC_ADMINISTRATOR, Console::Yes },
             { "creature_template",             HandleReloadCreatureTemplateCommand,           SEC_ADMINISTRATOR, Console::Yes },
+            { "creature_template_outfits",     HandleReloadCreatureTemplateOutfitsCommand,    SEC_ADMINISTRATOR, Console::Yes },
             { "disables",                      HandleReloadDisablesCommand,                   SEC_ADMINISTRATOR, Console::Yes },
             { "disenchant_loot_template",      HandleReloadLootTemplatesDisenchantCommand,    SEC_ADMINISTRATOR, Console::Yes },
             { "event_scripts",                 HandleReloadEventScriptsCommand,               SEC_ADMINISTRATOR, Console::Yes },
@@ -491,6 +493,24 @@ public:
         LOG_INFO("server.loading", "Loading Quests Relations... (`creature_queststarter`)");
         sObjectMgr->LoadCreatureQuestStarters();
         handler->SendGlobalGMSysMessage("DB table `creature_queststarter` reloaded.");
+        return true;
+    }
+
+    static bool HandleReloadCreatureTemplateOutfitsCommand(ChatHandler* handler)
+    {
+        LOG_INFO("server.loading", "Loading Creature Outfits... (`creature_template_outfits`)");
+        sObjectMgr->LoadCreatureOutfits();
+        sMapMgr->DoForAllMaps([](Map* map)
+        {
+            for (auto e : map->GetCreatureBySpawnIdStore())
+            {
+                auto const& outfit = e.second->GetOutfit();
+                if (outfit && outfit->GetId())
+                    e.second->SetDisplayId(outfit->GetId());
+            }
+        });
+
+        handler->SendGlobalGMSysMessage("DB table `creature_template_outfits` reloaded.");
         return true;
     }
 
