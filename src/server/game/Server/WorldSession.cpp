@@ -1509,3 +1509,8 @@ void WorldSession::InitializeSessionCallback(CharacterDatabaseQueryHolder const&
     SendClientCacheVersion(clientCacheVersion);
     SendTutorialsData();
 }
+
+void WorldSession::HandleTeleportToGeaveyardOpcode(WorldPacket& /*recvPacket*/)
+{
+    _player->RepopAtGraveyard();
+}

@@ -612,6 +612,7 @@ public:                                                 // opcodes handlers
     // new
     void HandleMoveUnRootAck(WorldPacket& recvPacket);
     void HandleMoveRootAck(WorldPacket& recvPacket);
+    void HandleTeleportToGeaveyardOpcode(WorldPacket& recvPacket);
 
     // new inspect
     void HandleInspectOpcode(WorldPacket& recvPacket);
