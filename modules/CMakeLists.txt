@@ -278,7 +278,7 @@ add_library(modules STATIC
     ${PRIVATE_SOURCES_MODULES})
 
 if (MOD_ECLIPSE_FOUND)
-    target_link_libraries(modules PUBLIC lualib sol2::sol2)
+    target_link_libraries(modules PUBLIC lualib)
 endif()
 
 target_link_libraries(modules
